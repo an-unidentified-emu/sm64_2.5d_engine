@@ -1278,6 +1278,14 @@ void update_mario_button_inputs(struct MarioState *m) {
         m->input |= INPUT_A_DOWN;
     }
 
+   /* if (m->controller->buttonDown & L_TRIG) {
+        m->input |= INPUT_L_PRESSED;
+    }
+
+    if (m->controller->buttonPressed & L_TRIG) {
+        m->input |= INPUT_L_PRESSED;
+    }*/
+
     // Don't update for these buttons if squished.
     if (m->squishTimer == 0) {
         if (m->controller->buttonPressed & B_BUTTON) {
@@ -1313,12 +1321,64 @@ void update_mario_joystick_inputs(struct MarioState *m) {
     struct Controller *controller = m->controller;
     f32 mag = ((controller->stickMag / 64.0f) * (controller->stickMag / 64.0f)) * 64.0f;
 
-    if (m->squishTimer == 0) {
+     if (m->controller->buttonPressed & R_JPAD) {
+        //m->input |= INPUT_L_JPAD_PRESSED;
+        if (m->controller->buttonDown & B_BUTTON) {
+            mag = 80.0f;
+            controller->stickX = 300.0f;
+            m->input |= INPUT_NONZERO_ANALOG;
+        }
+        else {
+         mag = 25.0f;
+         controller->stickX = 5000.0f;
+         m->input |= INPUT_NONZERO_ANALOG;
+         }
+    }
+    if (m->controller->buttonDown & R_JPAD) {
+        //m-input |= INPUT_L_JPAD_DOWN;
+        if (m->controller->buttonDown & B_BUTTON) {
+            mag = 80.0f;
+            controller->stickX = 300.0f;
+            m->input |= INPUT_NONZERO_ANALOG;
+        }
+        else {
+         mag = 25.0f;
+         controller->stickX = 5000.0f;
+         m->input |= INPUT_NONZERO_ANALOG;
+         }
+    }
+    if (m->controller->buttonPressed & L_JPAD) {
+        //m->input |= INPUT_L_JPAD_PRESSED;
+        if (m->controller->buttonDown & B_BUTTON) {
+            mag = 80.0f;
+            controller->stickX = -300.0f;
+            m->input |= INPUT_NONZERO_ANALOG;
+        }
+        else {
+         mag = 25.0f;
+         controller->stickX = -5000.0f;
+         m->input |= INPUT_NONZERO_ANALOG;
+         }
+    }
+    if (m->controller->buttonDown & L_JPAD) {
+        //m-input |= INPUT_L_JPAD_DOWN;
+        if (m->controller->buttonDown & B_BUTTON) {
+            mag = 80.0f;
+            controller->stickX = -300.0f;
+            m->input |= INPUT_NONZERO_ANALOG;
+        }
+        else {
+         mag = 25.0f;
+         controller->stickX = -5000.0f;
+         m->input |= INPUT_NONZERO_ANALOG;
+         }
+    }
+if (m->squishTimer == 0) {
         m->intendedMag = mag / 2.0f;
     } else {
         m->intendedMag = mag / 8.0f;
     }
-
+   
     if (m->intendedMag > 0.0f) {
         m->intendedYaw = atan2s(-controller->stickY, controller->stickX) + m->area->camera->yaw;
         m->input |= INPUT_NONZERO_ANALOG;

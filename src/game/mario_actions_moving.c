@@ -808,6 +808,12 @@ s32 act_walking(struct MarioState *m) {
         return set_mario_action(m, ACT_CROUCH_SLIDE, 0);
     }
 
+    if (m->controller->buttonPressed & L_TRIG) {
+         if (m->forwardVel > 10.0f) {
+                return set_jumping_action(m, ACT_LONG_JUMP, 0);
+            }
+    }
+
     m->actionState = 0;
 
     vec3f_copy(startPos, m->pos);
